@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Sataka Sadhana</title>
+	<style>
+		:root {
+			--bg1: #f9fafb;
+			--bg2: #e6fffa;
+			--ink: #0f172a;
+			--muted: #475569;
+			--primary: #0f766e;
+			--primary-dark: #115e59;
+			--card: #ffffff;
+			--ring: rgba(15, 118, 110, 0.22);
+		}
+
+		* { box-sizing: border-box; }
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+			color: var(--ink);
+			background: radial-gradient(1200px 700px at 20% 20%, var(--bg2), var(--bg1));
+			display: grid;
+			place-items: center;
+			padding: 24px;
+		}
+
+		.card {
+			width: min(760px, 100%);
+			background: var(--card);
+			border-radius: 20px;
+			padding: clamp(20px, 4vw, 42px);
+			box-shadow: 0 16px 45px rgba(2, 6, 23, 0.09);
+			border: 1px solid #e2e8f0;
+		}
+
+		h1 {
+			margin: 0 0 8px;
+			font-size: clamp(1.7rem, 4vw, 2.7rem);
+			line-height: 1.2;
+		}
+
+		p {
+			margin: 0;
+			color: var(--muted);
+			line-height: 1.6;
+			font-size: 1.03rem;
+		}
+
+		.features {
+			margin: 20px 0 26px;
+			padding: 0;
+			list-style: none;
+			display: grid;
+			gap: 10px;
+		}
+
+		.features li {
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			border-radius: 12px;
+			padding: 10px 12px;
+			color: #1e293b;
+			font-size: 0.98rem;
+		}
+
+		.cta {
+			border: 0;
+			border-radius: 12px;
+			padding: 14px 20px;
+			background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+			color: #ffffff;
+			font-size: 1rem;
+			font-weight: 700;
+			cursor: pointer;
+			box-shadow: 0 10px 24px var(--ring);
+			transition: transform 140ms ease, filter 140ms ease;
+		}
+
+		.cta:hover {
+			transform: translateY(-1px);
+			filter: brightness(1.03);
+		}
+
+		.cta:active {
+			transform: translateY(0);
+		}
+
+		.tiny {
+			margin-top: 12px;
+			color: #64748b;
+			font-size: 0.88rem;
+		}
+	</style>
+</head>
+<body>
+	<main class="card">
+		<h1>Welcome to Sataka Sadhana</h1>
+		<p>
+			Practice Telugu padyalu with guided recitation, voice playback, and progress tracking.
+			Tap below to enter the main learning app.
+		</p>
+
+		<ul class="features">
+			<li>Recite verses with line-by-line support.</li>
+			<li>Track your learning streak and completion.</li>
+			<li>Use kid and adult practice modes.</li>
+		</ul>
+
+		<button id="enterApp" class="cta" type="button">Start Learning</button>
+		<div class="tiny">Clicking the button routes to /src/index.html</div>
+	</main>
+
+	<script>
+		document.getElementById("enterApp").addEventListener("click", function () {
+			window.location.href = "/src/index.html";
+		});
+	</script>
+</body>
+</html>
