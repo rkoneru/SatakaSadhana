@@ -20,8 +20,8 @@ window.showLogs = () => {
   alert("Recent logs:\n\n" + window.debugLogs.slice(-20).join("\n"));
 };
 
-const nav = [["home", "Home"], ["prac", "Practice"], ["prog", "Progress"], ["lib", "Library"], ["set", "Settings"]];
-
+const nav = [["home", "Home"], ["prac", "Practice"],  ["lib", "Library"], ["set", "Settings"]];
+/* ["prog", "Progress"], */
 const el = {
   home: document.getElementById("v-home"),
   lib: document.getElementById("v-lib"),
@@ -34,7 +34,7 @@ const bottom = document.getElementById("bottom");
 const streakEl = document.getElementById("streak");
 
 const saved = loadState();
-const st = { v: "home", q: "", f: "all", i: 0, r: false, ...saved };
+const st = { v: "home", q: "", f: "all", i: 0, r: false, loopCount: 1, theme: "calm", ...saved };
 
 function todayKey() {
   return new Date().toISOString().slice(0, 10);
@@ -77,6 +77,12 @@ function applyKidMode() {
   document.body.classList.toggle("kid-mode", st.kidMode);
 }
 
+function applyTheme() {
+  const themes = ["calm", "bold", "minimal"];
+  const selected = themes.includes(st.theme) ? st.theme : "calm";
+  document.documentElement.setAttribute("data-ui-theme", selected);
+}
+
 function setView(v) {
   st.v = v;
   for (const k in el) el[k].classList.toggle("hide", k !== v);
@@ -94,6 +100,7 @@ function renderNav() {
       )
       .join("");
   side.innerHTML = `<div class="side-nav">${mk(false)}</div>`;
+  bottom.style.setProperty("--nav-count", nav.length);
   bottom.innerHTML = mk(true);
   document.querySelectorAll("[data-v]").forEach((b) => (b.onclick = () => setView(b.dataset.v)));
 }
@@ -127,9 +134,29 @@ function viewLibrary() {
     viewLibrary();
   };
   document.querySelectorAll(".lib-listen").forEach((btn) => {
-    btn.onclick = () => speakAudio(btn.dataset.id, "full", {
-      onError: () => { btn.textContent = "⚠ Audio not available"; }
-    });
+    const tile = btn.closest(".it");
+    btn.onclick = () => {
+      if (btn.dataset.playing === "1") {
+        stopSpeaking();
+        btn.dataset.playing = "";
+        btn.textContent = "🔊 Listen";
+        tile.classList.remove("playing");
+        return;
+      }
+      document.querySelectorAll(".it.playing").forEach((t) => t.classList.remove("playing"));
+      document.querySelectorAll('.lib-listen[data-playing="1"]').forEach((b) => {
+        b.dataset.playing = "";
+        b.textContent = "🔊 Listen";
+      });
+      btn.dataset.playing = "1";
+      btn.textContent = "⏹ Stop";
+      tile.classList.add("playing");
+      speakAudio(btn.dataset.id, "full", {
+        loopCount: st.loopCount,
+        onEnd: () => { btn.dataset.playing = ""; btn.textContent = "🔊 Listen"; tile.classList.remove("playing"); },
+        onError: () => { btn.dataset.playing = ""; btn.textContent = "⚠ Audio not available"; tile.classList.remove("playing"); }
+      });
+    };
   });
 }
 
@@ -218,8 +245,8 @@ function viewPractice() {
     </div>
     <div class="controls" style="margin-top:10px">
       <button id="done" class="btn" ${alreadyLearned ? "disabled" : ""}>${alreadyLearned ? "✓ Learned" : "✓ Mark Learned"}</button>
-      <button id="prev" class="btnw">← Previous</button>
-      <button id="next" class="btnw">Next →</button>
+      <button id="prev" class="btn3">← Previous</button>
+      <button id="next" class="btn3">Next →</button>
     </div>`;
   const audioEl = document.getElementById("rec-audio");
   if (audioEl) fixAudioDuration(audioEl);
@@ -327,9 +354,40 @@ function viewSettings() {
         <button id="modeAdult" class="${st.kidMode ? "btn2" : "btn"}">🎓 Adult Mode</button>
       </div>
     </div>
+    <div class="it" style="margin-top:10px">
+      <h4 style="margin:0 0 4px">App Theme</h4>
+      <div class="small" style="margin-bottom:8px">Pick a visual style for your learning experience.</div>
+      <div class="controls">
+        <button id="themeCalm" class="theme-choice ${st.theme === "calm" ? "btn" : "btn2"}"><span class="theme-swatch swatch-calm" aria-hidden="true"></span>Calm Classroom</button>
+        <button id="themeBold" class="theme-choice ${st.theme === "bold" ? "btn" : "btn2"}"><span class="theme-swatch swatch-bold" aria-hidden="true"></span>Bold Gamified</button>
+        <button id="themeMinimal" class="theme-choice ${st.theme === "minimal" ? "btn" : "btn2"}"><span class="theme-swatch swatch-minimal" aria-hidden="true"></span>Minimal Premium</button>
+      </div>
+    </div>
+    <div class="it" style="margin-top:10px">
+      <h4 style="margin:0 0 4px">Listen Loop Count</h4>
+      <div class="small" style="margin-bottom:8px">How many times the full verse audio repeats when you tap Listen in the Library.</div>
+      <select id="loopCount">
+        ${[1, 2, 3, 5].map((n) => `<option value="${n}" ${st.loopCount === n ? "selected" : ""}>${n}x</option>`).join("")}
+        <option value="0" ${st.loopCount === Infinity ? "selected" : ""}>Repeat until stopped</option>
+      </select>
+    </div>
     <div class="it" style="margin-top:10px"><div class="small">Progress is saved in browser localStorage.</div></div>
     <div class="controls"><button id="reset" class="btnw">Reset Progress</button></div>
     <div class="small">Tip: add this page to your home screen for an app-like launch.</div>`;
+  document.getElementById("loopCount").onchange = (e) => {
+    const v = Number(e.target.value);
+    st.loopCount = v === 0 ? Infinity : v;
+    persist();
+  };
+  const setTheme = (theme) => {
+    st.theme = theme;
+    persist();
+    applyTheme();
+    viewSettings();
+  };
+  document.getElementById("themeCalm").onclick = () => setTheme("calm");
+  document.getElementById("themeBold").onclick = () => setTheme("bold");
+  document.getElementById("themeMinimal").onclick = () => setTheme("minimal");
   document.getElementById("modeKid").onclick = () => {
     st.kidMode = true;
     persist();
@@ -387,6 +445,7 @@ function init() {
   );
   window.addEventListener("beforeunload", () => recorder.dispose());
   applyKidMode();
+  applyTheme();
   renderNav();
   setView("home");
 }

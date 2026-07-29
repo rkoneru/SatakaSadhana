@@ -18,7 +18,9 @@ export function loadState() {
     s: Number.isFinite(saved.s) ? saved.s : 0,
     learned: Array.isArray(saved.learned) ? saved.learned : [],
     lastPracticeDate: saved.lastPracticeDate || null,
-    kidMode: typeof saved.kidMode === "boolean" ? saved.kidMode : true
+    kidMode: typeof saved.kidMode === "boolean" ? saved.kidMode : true,
+    loopCount: saved.loopCount === 0 ? Infinity : (Number.isFinite(saved.loopCount) && saved.loopCount > 0 ? saved.loopCount : 1),
+    theme: ["calm", "bold", "minimal"].includes(saved.theme) ? saved.theme : "calm"
   };
 }
 
@@ -26,7 +28,9 @@ export function saveState(st) {
   try {
     localStorage.setItem(KEY, JSON.stringify({
       c: st.c, d: st.d, s: st.s, learned: st.learned, lastPracticeDate: st.lastPracticeDate,
-      kidMode: st.kidMode
+      kidMode: st.kidMode,
+      loopCount: st.loopCount === Infinity ? 0 : st.loopCount,
+      theme: st.theme
     }));
   } catch (_) {
     // storage unavailable (private mode / quota) — silently ignore

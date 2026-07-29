@@ -1,4 +1,4 @@
-const CACHE = "sataka-v1";
+const CACHE = "sataka-v9";
 const CORE_ASSETS = [
   "./",
   "./index.html",
