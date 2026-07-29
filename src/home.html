@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="te">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sataka Sadhana App</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icons/icon.svg">
+<meta name="theme-color" content="#0f766e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Telugu:wght@400;600;700&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./css/app.css">
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand"><div class="logo">శ</div><div><strong>Sataka Sadhana</strong><div class="small">Telugu Padyalu Trainer</div></div></div>
+  <div id="streak" class="pill">Daily streak: 0 days</div>
+</header>
+<div class="wrap">
+  <aside class="side"><div id="side" class="card"></div></aside>
+  <main>
+    <section id="v-home" class="card hero"></section>
+    <section id="v-prac" class="card hide"></section>
+    <section id="v-prog" class="card hide"></section>
+    <section id="v-lib" class="card hide"></section>
+    <section id="v-set" class="card hide"></section>
+  </main>
+</div>
+</div>
+<nav id="bottom" class="bottom"></nav>
+<script type="module" src="./js/app.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

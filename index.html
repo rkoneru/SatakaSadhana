@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sataka Sadhana</title>
+  <style>
+    :root {
+      --bg1: #f9fafb;
+      --bg2: #e6fffa;
+      --ink: #0f172a;
+      --muted: #475569;
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --card: #ffffff;
+      --ring: rgba(15, 118, 110, 0.22);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(1200px 700px at 20% 20%, var(--bg2), var(--bg1));
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(760px, 100%);
+      background: var(--card);
+      border-radius: 20px;
+      padding: clamp(20px, 4vw, 42px);
+      box-shadow: 0 16px 45px rgba(2, 6, 23, 0.09);
+      border: 1px solid #e2e8f0;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.7rem, 4vw, 2.7rem);
+      line-height: 1.2;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 1.03rem;
+    }
+
+    .features {
+      margin: 20px 0 26px;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .features li {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #1e293b;
+      font-size: 0.98rem;
+    }
+
+    .cta {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 24px var(--ring);
+      transition: transform 140ms ease, filter 140ms ease;
+    }
+
+    .cta:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+
+    .cta:active {
+      transform: translateY(0);
+    }
+
+    .tiny {
+      margin-top: 12px;
+      color: #64748b;
+      font-size: 0.88rem;
+    }
+
+    .collections {
+      margin: 20px 0 26px;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .collections li {
+      background: #f0fdfa;
+      border: 1px solid #ccfbf1;
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .collections .name {
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .collections .meta {
+      margin-top: 2px;
+      color: #64748b;
+      font-size: 0.85rem;
+    }
+
+    h2 {
+      margin: 24px 0 10px;
+      font-size: 1.1rem;
+      color: var(--ink);
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Welcome to Sataka Sadhana</h1>
+    <p>
+      Practice Telugu Sataka padyalu (శతక పద్యాలు) with line-by-line recitation, native audio
+      playback, pronunciation scoring, and daily streak tracking &mdash; right in your browser,
+      works offline once installed.
+    </p>
+
+    <h2>Collections included</h2>
+    <ul class="collections">
+      <li>
+        <div class="name">సుమతీ శతకము &middot; Sumathi Satakam</div>
+        <div class="meta">9 verses &middot; Easy level</div>
+      </li>
+      <li>
+        <div class="name">వేమన శతకము &middot; Vemana Satakam</div>
+        <div class="meta">9 verses &middot; Medium level</div>
+      </li>
+    </ul>
+
+    <ul class="features">
+      <li>Listen to full-verse and line-by-line audio in native Telugu.</li>
+      <li>Practice recitation with voice recording and pronunciation scoring.</li>
+      <li>See English meanings for every verse and every line.</li>
+      <li>Track your daily streak and completion progress.</li>
+      <li>Install as an app (PWA) and practice offline, anytime.</li>
+    </ul>
+
+    <button id="enterApp" class="cta" type="button">Start Learning</button>
+    <div class="tiny">Clicking the button opens the main app</div>
+  </main>
+
+  <script>
+    document.getElementById("enterApp").addEventListener("click", function () {
+      window.location.href = "./src/home.html";
+    });
+  </script>
+</body>
+</html>

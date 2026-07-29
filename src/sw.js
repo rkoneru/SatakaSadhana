@@ -1,4 +1,4 @@
-const CACHE = "sataka-v9";
+const CACHE = "sataka-v15";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -33,6 +33,8 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // let Google Fonts fail offline, no-op
+  if (url.pathname.includes("/audio/")) return; // let the browser handle range requests for media directly
+  if (req.headers.get("range")) return; // never intercept range requests — the Cache API can't store partial responses reliably
 
   event.respondWith(
     caches.match(req).then((cached) => {

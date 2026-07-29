@@ -1,44 +1,44 @@
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 export function createSpeech(onTranscript, onError) {
-  const s = { engine: null, transcript: "", supported: !!SR, active: false };
+  const speechState = { engine: null, transcript: "", supported: !!SpeechRecognitionCtor, active: false };
 
   function start() {
-    s.transcript = "";
-    if (!s.supported) return;
+    speechState.transcript = "";
+    if (!speechState.supported) return;
     try {
-      s.engine = new SR();
-      s.engine.lang = "te-IN";
-      s.engine.interimResults = true;
-      s.engine.continuous = true;
-      s.engine.onresult = (e) => {
-        let out = "";
-        for (let i = 0; i < e.results.length; i++) out += e.results[i][0].transcript + " ";
-        s.transcript = out.trim();
-        onTranscript && onTranscript(s.transcript);
+      speechState.engine = new SpeechRecognitionCtor();
+      speechState.engine.lang = "te-IN";
+      speechState.engine.interimResults = true;
+      speechState.engine.continuous = true;
+      speechState.engine.onresult = (event) => {
+        let combinedTranscript = "";
+        for (let i = 0; i < event.results.length; i++) combinedTranscript += event.results[i][0].transcript + " ";
+        speechState.transcript = combinedTranscript.trim();
+        onTranscript && onTranscript(speechState.transcript);
       };
-      s.engine.onerror = (e) => {
-        if (e.error === "not-allowed" || e.error === "service-not-allowed") {
+      speechState.engine.onerror = (event) => {
+        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
           onError && onError("Microphone/speech permission denied for live transcription.");
         }
       };
-      s.engine.onend = () => {
-        s.active = false;
+      speechState.engine.onend = () => {
+        speechState.active = false;
       };
-      s.engine.start();
-      s.active = true;
+      speechState.engine.start();
+      speechState.active = true;
     } catch (_) {
-      s.engine = null;
-      s.active = false;
+      speechState.engine = null;
+      speechState.active = false;
     }
   }
 
   function stop() {
     try {
-      s.engine && s.engine.stop();
+      speechState.engine && speechState.engine.stop();
     } catch (_) { /* already stopped */ }
-    s.active = false;
+    speechState.active = false;
   }
 
-  return { state: s, start, stop };
+  return { state: speechState, start, stop };
 }
